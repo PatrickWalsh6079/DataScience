@@ -1,9 +1,15 @@
 '''
-This program sends images in a zip file to the Watson Visual Recognition service for classification
-and automatically writes the results to an Excel spreadsheet. When it is run, the images are
-sent to the image classifier model that you specify with your Version date and API key, and the
-model sends a JSON result. That result is parsed and written to a spreadsheet and the Precision,
-Recall, and F1 score are automatically calculated, along with a Confusion Matrix for you to analyze.
+This program prepares images for training and testing of a Machine Learning image classifier by moving the 
+data into specific folders and assigning labels to the images for the model to read.
+The program grabs all files that start with "BIO", "SYM", or "NEG" prefix and copies them to folders
+labeled "Biofilm", "Symplast", and "Negative" respectively. It then attaches a randomly assigned 4 letter
+prefix to each file so that they are assigned to the folder in random order.
+Next, the program moves 400 Biofilm and 400 Symplast files to 8 separate subfolders, each
+subfolder containing 100 images of either Biofilm or Symplasts. It also attaches labels to these
+images indicating which training iteration they belong to. It also zips these subfolders.
+It also moves 200 files from the Biofilm (80), Symplast (80), and Negative (40) folders into a Testing
+folder. Finally, the user has the ability to delete all training data from Biofilm and Symplast folders,
+as well as all subfolders and testing folder with a single call.
 '''
 
 ##################
