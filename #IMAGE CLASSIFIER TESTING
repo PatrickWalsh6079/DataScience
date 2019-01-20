@@ -1,0 +1,220 @@
+'''
+This program sends images in a zip file to the Watson Visual Recognition service for classification
+and automatically writes the results to an Excel spreadsheet. When it is run, the images are
+sent to the image classifier model that you specify with your Version date and API key, and the
+model sends a JSON result. That result is parsed and written to a spreadsheet and the Precision,
+Recall, and F1 score are automatically calculated, along with a Confusion Matrix for you to analyze.
+'''
+
+##################
+# classify images
+#################
+
+# maximum image size: 10 MB
+# maximum image count: 20
+# for zip files: max 100 MB
+
+import json, xlwt
+from watson_developer_cloud import VisualRecognitionV3
+from xlwt import Workbook
+from xlwt import *
+from datetime import date
+
+###############################################
+# invoke model with version number and API key
+##############################################
+visual_recognition = VisualRecognitionV3(
+    'INSERT VERSION DATE HERE',
+    iam_apikey='INSERT YOUR API KEY HERE')
+
+# counter used to iterate through JSON results
+counter = 0
+
+############################################################
+# grab zip folder of test images and initiate tagging event
+############################################################
+with open(r"C:\Users\pwalsh\Desktop\Classifier Testing\Testing.zip", 'rb') as images_file:
+    classes = visual_recognition.classify(images_file,threshold='0.0',owners=["me"]).get_result()
+    #print(json.dumps(classes, indent=2))
+    
+    # calculate number of images classified
+    number_images = int(json.dumps(classes["images_processed"]))-1
+    print(number_images)
+    print('\n')
+    print(json.dumps(classes))
+    print('\n')
+    
+#################################################
+# results that will be written to Analysis sheet
+#################################################
+biofilm_correct = 0
+biofilm_wrong = 0
+biofilm_unclass = 0
+symplast_correct = 0
+symplast_wrong = 0
+symplast_unclass = 0
+negative_correct = 0
+negative_bio = 0
+negative_sym = 0
+
+
+
+######################################################################
+# create excel spreadsheet and add worksheets 'Results' and 'Analysis'
+######################################################################
+wb = Workbook()
+excel_counter = 0
+results = wb.add_sheet('Results')
+
+# write column headers for 'Results' sheet
+results.write(excel_counter, 0, 'Date') 
+results.write(excel_counter, 1, 'Model Name') 
+results.write(excel_counter, 2, 'Iteration') 
+results.write(excel_counter, 3, 'File Name') 
+results.write(excel_counter, 4, 'Type') 
+results.write(excel_counter, 5, 'Biofilm') 
+results.write(excel_counter, 6, 'Symplast') 
+results.write(excel_counter, 7, 'Prediction')
+
+
+############################################
+# start loop to parse training data results
+############################################
+while counter <= number_images:
+        print('Image {}'.format(counter+1))
+        print('\n')
+    
+        ########################################
+        # these values will be written to Excel
+        #######################################
+        model_name = json.dumps(classes["images"][counter]["classifiers"][0]["name"])
+        file_name = json.dumps(classes["images"][counter]["image"][20:])
+        biofilm_class = json.dumps(classes["images"][counter]["classifiers"][0]["classes"][0]["class"])
+        biofilm_score = float(json.dumps(classes["images"][counter]["classifiers"][0]["classes"][0]["score"]))
+        symplast_class = json.dumps(classes["images"][counter]["classifiers"][0]["classes"][1]["class"])
+        symplast_score = float(json.dumps(classes["images"][counter]["classifiers"][0]["classes"][1]["score"]))
+        test_date = str(date.today())
+        iteration = 'NULL'
+        print('Model: '+model_name)
+        print('Image: '+file_name)
+        print(biofilm_class+': ',biofilm_score)
+        print(symplast_class+': ',symplast_score)
+        
+        
+        
+        
+        # determine if file is biofilm or symplast
+        image_type = ''
+        if 'BIO' in file_name:
+            print('Type: Biofilm')
+            image_type = '"Biofilm"'
+        elif 'SYM' in file_name:
+            print('Type: Symplast')
+            image_type = '"Symplast"'
+        elif 'NEG' in file_name:
+            print('Type: Negative')
+            image_type = '"Negative"'
+        
+        
+        # determine if classified correctly, add to variables for Analysis sheet
+        if image_type == biofilm_class and biofilm_score >= 0.80:
+            print('Classified correct')
+            biofilm_correct += 1
+        elif image_type == biofilm_class and symplast_score >= 0.80:
+            print('Classified wrong')
+            biofilm_wrong += 1
+        elif image_type == biofilm_class and symplast_score < 0.80 and biofilm_score < 0.80:
+            print('Unclassified')
+            biofilm_unclass += 1
+        elif image_type == symplast_class and symplast_score >= 0.80:
+            print('Classified correct')
+            symplast_correct += 1
+        elif image_type == symplast_class and biofilm_score >= 0.80:
+            print('Classified wrong')
+            symplast_wrong += 1
+        elif image_type == symplast_class and symplast_score < 0.80 and biofilm_score < 0.80:
+            print('Unclassified')
+            symplast_unclass += 1
+        elif image_type == '"Negative"' and symplast_score < 0.80 and biofilm_score < 0.80:
+            print('Classified correct')
+        elif image_type == '"Negative"' and biofilm_score >= 0.80:
+            print('Classified wrong')
+            negative_bio += 1
+        elif image_type == '"Negative"' and symplast_score >= 0.80:
+            print('Classified wrong')
+            negative_sym += 1
+            
+        # determine iteration number
+        if 'SET 1' in file_name:
+            iteration = 1
+        elif 'SET 2' in file_name:
+            iteration = 2
+        elif 'SET 3' in file_name:
+            iteration = 3
+        elif 'SET 4' in file_name:
+            iteration = 4
+        
+        excel_counter += 1
+        
+        # write results to Excel spreadsheet
+        results.write(excel_counter, 0, test_date) 
+        results.write(excel_counter, 1, model_name) 
+        results.write(excel_counter, 2, iteration) 
+        results.write(excel_counter, 3, file_name) 
+        results.write(excel_counter, 4, image_type) 
+        results.write(excel_counter, 5, biofilm_score) 
+        results.write(excel_counter, 6, symplast_score) 
+        results.write(excel_counter, 7, Formula('IF(F{}>=0.8;"BIO";IF(G{}>=0.8;"SYM";"none"))'.format(excel_counter+1,excel_counter+1)))    
+            
+        # add 1 to counter
+        counter += 1
+        print('\n')
+
+# create analysis worksheet
+analysis = wb.add_sheet('Analysis')
+
+# create confusion matrix
+analysis.write(0, 2, 'Confusion Matrix')
+analysis.write(2, 2, 'Actual')
+analysis.write(3, 2, 'BIOFILM')
+analysis.write(3, 3, 'SYMPLAST')
+analysis.write(3, 4, 'NEGATIVE')
+analysis.write(4, 0, 'Predicted')
+analysis.write(4, 1, 'BIOFILM')
+analysis.write(5, 1, 'SYMPLAST')
+analysis.write(6, 1, 'UNCLASSIFIED')
+analysis.write(4, 2, biofilm_correct)
+analysis.write(5, 2, biofilm_wrong)
+analysis.write(6, 2, biofilm_unclass)
+analysis.write(5, 3, symplast_correct)
+analysis.write(4, 3, symplast_wrong)
+analysis.write(6, 3, symplast_unclass)
+analysis.write(6, 4, negative_correct)
+analysis.write(5, 4, negative_sym)
+analysis.write(4, 4, negative_bio)
+
+# calculate precision, recall, and F1
+analysis.write(9, 2, 'Precision')
+analysis.write(9, 3, 'Recall')
+analysis.write(9, 4, 'F1')
+analysis.write(10, 1, 'BIOFILM')
+analysis.write(11, 1, 'SYMPLAST')
+analysis.write(10, 2, Formula('C5/(C5+D5+E5)'))
+analysis.write(10, 3, Formula('C5/(C5+C6+C7)'))
+analysis.write(10, 4, Formula('2*(C11*D11)/(C11+D11)'))
+analysis.write(11, 2, Formula('D6/(C6+D6+E6)'))
+analysis.write(11, 3, Formula('D6/(D5+D6+D7)'))
+analysis.write(11, 4, Formula('2*(C12*D12)/(C12+D12)'))
+
+# save spreadsheet
+wb.save(r'C:\Users\pwalsh\Desktop\Classifier Testing\Notebook Results.xls')
+
+print('Biofilm correct: ',biofilm_correct) 
+print('Biofilm wrong: ',biofilm_wrong)
+print('Biofilm unclassified: ',biofilm_unclass)
+print('Symplast correct: ',symplast_correct)
+print('Symplast wrong: ',symplast_wrong)
+print('Symplast unclassified: ',symplast_unclass)
+print('Negative correct: ',negative_correct)
+print('Negative bio: ',negative_bio)
+print('Negative sym: ',negative_sym)
