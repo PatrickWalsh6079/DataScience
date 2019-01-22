@@ -30,8 +30,8 @@ from datetime import date
 # invoke model with version number and API key
 ##############################################
 visual_recognition = VisualRecognitionV3(
-    'INSERT VERSION DATE HERE',
-    iam_apikey='INSERT YOUR API KEY HERE')
+    '2018-03-19',
+    iam_apikey='O0wBXFqQYGQlIDY2SR_V1ZBAgMVfCoVCf3NKch1_DPQ_')
 
 # counter used to iterate through JSON results
 counter = 0
@@ -199,18 +199,20 @@ analysis.write(6, 4, negative_correct)
 analysis.write(5, 4, negative_sym)
 analysis.write(4, 4, negative_bio)
 
-# calculate precision, recall, and F1
+# calculate precision, recall, F1, and accuracy
 analysis.write(9, 2, 'Precision')
 analysis.write(9, 3, 'Recall')
 analysis.write(9, 4, 'F1')
 analysis.write(10, 1, 'BIOFILM')
 analysis.write(11, 1, 'SYMPLAST')
+analysis.write(3, 6, 'Accuracy')
 analysis.write(10, 2, Formula('C5/(C5+D5+E5)'))
 analysis.write(10, 3, Formula('C5/(C5+C6+C7)'))
 analysis.write(10, 4, Formula('2*(C11*D11)/(C11+D11)'))
 analysis.write(11, 2, Formula('D6/(C6+D6+E6)'))
 analysis.write(11, 3, Formula('D6/(D5+D6+D7)'))
 analysis.write(11, 4, Formula('2*(C12*D12)/(C12+D12)'))
+analysis.write(3, 7, Formula('(C5+D6+E7)/(C5+D5+E5+C6+D6+E6+C7+D7+E7)'))
 
 # save spreadsheet
 wb.save(r'C:\Users\pwalsh\Desktop\Classifier Testing\Notebook Results.xls')
