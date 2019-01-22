@@ -341,11 +341,16 @@ for f in glob.glob(neg+'\\*'):
     if counter > 39:
         break
 
+# zips Testing folder       
+shutil.make_archive(test, 'zip', test)
+
 # DATA RESET
 ###########################################################################
 # removes all training images from Biofilm, Symplast, and Negative as well 
 # as all subfolders and Testing folder. deletes zipped folders.
 ###########################################################################
+
+import os, shutil, glob, random, string, zipfile
 
 #########################################
 # removes all images from biofilm folder
@@ -375,9 +380,9 @@ for f in os.listdir(folder):
         os.unlink(f)
 
         
-#####################################################################      
-# removes all images from biofilm subfolders, deletes zipped folders
 #####################################################################
+# removes all images from biofilm subfolders, deletes zipped folders
+####################################################################
 folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Datasets\BIO Dataset 1'
 for f in os.listdir(folder):
     f = os.path.join(folder, f)
@@ -439,11 +444,12 @@ for f in os.listdir(folder):
 os.remove(folder+'.zip')
 
 
-#########################################
-# removes all images from testing folder
-########################################
+######################################################################
+# removes all images from testing folder and deletes Testing.zip file
+#####################################################################
 folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Testing'
 for f in os.listdir(folder):
     f = os.path.join(folder, f)
     if os.path.isfile(f):
         os.unlink(f)
+os.remove(folder+'.zip')
