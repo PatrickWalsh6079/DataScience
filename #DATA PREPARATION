@@ -344,6 +344,14 @@ for f in glob.glob(neg+'\\*'):
 # zips Testing folder       
 shutil.make_archive(test, 'zip', test)
 
+# deletes desktop.ini file
+folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Testing'
+for f in os.listdir(folder):
+    f = os.path.join(folder, f)
+    #print(f)
+    if os.path.isfile(f) == folder+'\desktop.ini':
+        os.unlink(f)
+
 # DATA RESET
 ###########################################################################
 # removes all training images from Biofilm, Symplast, and Negative as well 
