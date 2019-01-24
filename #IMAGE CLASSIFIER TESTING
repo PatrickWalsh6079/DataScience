@@ -1,11 +1,3 @@
-'''
-This program sends images in a zip file to the Watson Visual Recognition service for classification
-and automatically writes the results to an Excel spreadsheet. When it is run, the images are
-sent to the image classifier model that you specify with your Version date and API key, and the
-model sends a JSON result. That result is parsed and written to a spreadsheet and the Precision,
-Recall, F1 score, and Accuracy are automatically calculated, along with a Confusion Matrix for you to analyze.
-'''
-
 ##################
 # classify images
 #################
@@ -32,11 +24,15 @@ visual_recognition = VisualRecognitionV3(
 excel_counter = 0
 
 
-
-#####################
-# specify iteration
-#####################
+#################################################################################################
+#################################################################################################
+# specify parameters for iteration number, Testing images, desired threshold, and results export
+#################################################################################################
+#################################################################################################
 iteration = 1
+test_folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Testing'
+threshold = 0.80
+notebook_results = r'C:\Users\pwalsh\Desktop\Classifier Testing\Notebook Results 1.xls'
 
 
 
@@ -74,7 +70,6 @@ negative_sym = 0
 ############################################################
 # grab zip folder of test images and initiate tagging event
 ############################################################
-test_folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Testing'
 for f in os.listdir(test_folder):
     f = os.path.join(test_folder, f)
     
@@ -129,31 +124,31 @@ for f in os.listdir(test_folder):
         
         
     # determine if classified correctly, add to variables for Analysis sheet
-    if image_type == biofilm_class and biofilm_score >= 0.80:
+    if image_type == biofilm_class and biofilm_score >= threshold:
         print('Classified correct')
         biofilm_correct += 1
-    elif image_type == biofilm_class and symplast_score >= 0.80:
+    elif image_type == biofilm_class and symplast_score >= threshold:
         print('Classified wrong')
         biofilm_wrong += 1
-    elif image_type == biofilm_class and symplast_score < 0.80 and biofilm_score < 0.80:
+    elif image_type == biofilm_class and symplast_score < threshold and biofilm_score < threshold:
         print('Unclassified')
         biofilm_unclass += 1
-    elif image_type == symplast_class and symplast_score >= 0.80:
+    elif image_type == symplast_class and symplast_score >= threshold:
         print('Classified correct')
         symplast_correct += 1
-    elif image_type == symplast_class and biofilm_score >= 0.80:
+    elif image_type == symplast_class and biofilm_score >= threshold:
         print('Classified wrong')
         symplast_wrong += 1
-    elif image_type == symplast_class and symplast_score < 0.80 and biofilm_score < 0.80:
+    elif image_type == symplast_class and symplast_score < threshold and biofilm_score < threshold:
         print('Unclassified')
         symplast_unclass += 1
-    elif image_type == '"negative"' and symplast_score < 0.80 and biofilm_score < 0.80:
+    elif image_type == '"negative"' and symplast_score < threshold and biofilm_score < threshold:
         print('Classified correct')
         negative_correct += 1
-    elif image_type == '"negative"' and biofilm_score >= 0.80:
+    elif image_type == '"negative"' and biofilm_score >= threshold:
         print('Classified wrong')
         negative_bio += 1
-    elif image_type == '"negative"' and symplast_score >= 0.80:
+    elif image_type == '"negative"' and symplast_score >= threshold:
         print('Classified wrong')
         negative_sym += 1
         '''    
@@ -226,7 +221,7 @@ analysis.write(11, 4, Formula('2*(C12*D12)/(C12+D12)'))
 analysis.write(3, 7, Formula('(C5+D6+E7)/(C5+D5+E5+C6+D6+E6+C7+D7+E7)'))
 
 # save spreadsheet
-wb.save(r'C:\Users\pwalsh\Desktop\Classifier Testing\Notebook Results.xls')
+wb.save(notebook_results)
 
 print('\n')
 print('Biofilm correct: ',biofilm_correct) 
