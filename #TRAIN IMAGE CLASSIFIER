@@ -20,7 +20,6 @@ visual_recognition = VisualRecognitionV3(
 import json
 
 # specify the training data to be used
-training_folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Datasets'
 training_bio = r'C:\Users\pwalsh\Desktop\Classifier Testing\Datasets\BIO Dataset 1.zip'
 training_sym = r'C:\Users\pwalsh\Desktop\Classifier Testing\Datasets\SYM Dataset 1.zip'
 
