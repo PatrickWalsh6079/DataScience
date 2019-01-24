@@ -124,13 +124,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 1'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -148,13 +142,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 2'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -172,13 +160,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 3'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -196,13 +178,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 4'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -227,13 +203,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 1'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -251,13 +221,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 2'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -275,13 +239,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 3'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -299,13 +257,7 @@ for f in os.listdir(dataset):
     os.rename(os.path.join(dataset,f), os.path.join(dataset,'SET 4'+' '+f))
 
 # zips folder
-training_zip = zipfile.ZipFile(final_dest+'\\'+zipped+'.zip', 'w') 
-for folder, subfolders, files in os.walk(final_dest+'\\'+zipped):
-    for file in files:
-        if file.endswith('.jpg'):
-            training_zip.write(os.path.join(folder, file), os.path.relpath(os.path.join(folder,file), 'C:\\Stories\\Fantasy'), compress_type = zipfile.ZIP_DEFLATED)
-
-training_zip.close()
+shutil.make_archive(dataset, 'zip', dataset)
 
 # reset counter to 0
 counter = 0
@@ -342,14 +294,13 @@ for f in glob.glob(neg+'\\*'):
         break
 
 # zips Testing folder       
-shutil.make_archive(test, 'zip', test)
+#shutil.make_archive(test, 'zip', test)
 
 # deletes desktop.ini file
 folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Testing'
 for f in os.listdir(folder):
     f = os.path.join(folder, f)
-    #print(f)
-    if os.path.isfile(f) == folder+'\desktop.ini':
+    if os.path.isfile(f) == folder+'\\desktop.ini':
         os.unlink(f)
 
 # DATA RESET
@@ -452,12 +403,12 @@ for f in os.listdir(folder):
 os.remove(folder+'.zip')
 
 
-######################################################################
-# removes all images from testing folder and deletes Testing.zip file
-#####################################################################
+#########################################
+# removes all images from testing folder
+#########################################
 folder = r'C:\Users\pwalsh\Desktop\Classifier Testing\Testing'
 for f in os.listdir(folder):
     f = os.path.join(folder, f)
     if os.path.isfile(f):
         os.unlink(f)
-os.remove(folder+'.zip')
+#os.remove(folder+'.zip')
