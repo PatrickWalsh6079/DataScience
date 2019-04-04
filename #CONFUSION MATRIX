@@ -1,0 +1,89 @@
+##############################################
+# Confusion Matrix to analyze results of 
+# Machine Learning model. Takes in Actual labels
+# and Predicted labels in the form of lists and
+# writes results to Confusion Matrix. Common tool
+# used by Data Scientists in the field of Machine
+# Learning and Artificial Intelligence.
+# Uses SciKit Learn Confusion Matrix import to 
+# build matrix along with Matplotlib to visualize
+# the data.
+##############################################
+
+
+################
+# actual labels
+################
+y_true = ["Fiat", "Smart Car", "VW Beetle", "Renault","Renault", 
+          "VW Beetle","Fiat","Smart Car","Smart Car","Renault","Fiat", 
+          "Smart Car", "VW Beetle", "Renault","Renault", "VW Beetle","Fiat",
+          "Smart Car","Smart Car","Renault","Fiat", "Smart Car", "VW Beetle", 
+          "Renault","Renault", "VW Beetle","Fiat","Smart Car","Smart Car",
+          "Renault","Fiat", "Smart Car", "VW Beetle", "Renault","Renault", 
+          "VW Beetle","Fiat","Smart Car","Smart Car","Renault","Fiat", 
+          "Smart Car", "VW Beetle", "Renault","Renault", "VW Beetle","Fiat",
+          "Smart Car","Smart Car","Renault"]
+          
+####################
+# predicted results
+####################
+y_pred = ["Unclass", "Smart Car","Unclass", "Smart Car","VW Beetle", "Unclass","Renault", 
+          "Unclass","Fiat","Fiat","Fiat", "Smart Car", "VW Beetle", 
+          "Renault","Renault", "VW Beetle","Fiat","Smart Car","Smart Car",
+          "Renault","Fiat", "Smart Car", "VW Beetle", "Renault","Renault", 
+          "VW Beetle","Fiat","Smart Car","Smart Car","Renault","Fiat", 
+          "Smart Car", "VW Beetle", "Renault","Renault", "VW Beetle","Fiat",
+          "Smart Car","Smart Car","Renault","Fiat", "Smart Car", "VW Beetle", 
+          "Renault","Renault", "VW Beetle","Fiat","Smart Car","Smart Car",
+          "Renault"]
+          
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from sklearn import svm, datasets
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.utils.multiclass import unique_labels
+
+
+object_categories = set(y_true)
+object_categories = list(object_categories)
+object_categories.append("Unclass")
+object_categories.sort()
+print(confusion_matrix(y_pred, y_true))
+
+
+def plot_confusion_matrix(y_pred, y_true,
+                          title=None,
+                          cmap=plt.cm.Blues):
+
+    cm = confusion_matrix(y_pred, y_true, object_categories)
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+            
+    plt.title(title,fontsize=18,color='white')
+    plt.xlabel('Actual',fontsize=16,color='white')
+    plt.ylabel('Predicted',fontsize=16,color='white')      
+    ax.set_yticklabels([''] + object_categories,fontsize=9,color='white')
+    object_categories.pop(-1)
+    ax.set_xticklabels([''] + object_categories,fontsize=9,color='white',rotation=30)
+    
+    cax = ax.matshow(cm, interpolation='nearest', cmap=('PuBu'))
+    
+    # Loop over data dimensions and create text annotations.
+    fmt = ''
+    x_shape = cm.shape[0]-1
+    y_shape = cm.shape[1]
+    thresh = cm.max() / 2
+    for i in range(y_shape):
+        for j in range(x_shape):
+            ax.text(j, i, format(cm[i, j], fmt),
+                    ha="center", va="center",
+                    color="white" if cm[i, j] > thresh else "black")
+
+# Plot confusion matrix
+plot_confusion_matrix(y_pred, y_true,title='Confusion matrix\n\n\n')
+object_categories.append("Unclass")
