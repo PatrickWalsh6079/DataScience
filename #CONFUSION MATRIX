@@ -39,37 +39,37 @@ y_pred = ["Unclass", "Smart Car","Unclass", "Smart Car","VW Beetle", "Unclass","
           
 
 
+# print out confusion matrix
+
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+
 from sklearn import svm, datasets
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 
 
-object_categories = set(y_true)
-object_categories = list(object_categories)
-object_categories.append("Unclass")
-object_categories.sort()
-print(confusion_matrix(y_pred, y_true))
+categories.append("Unclass")
+
 
 
 def plot_confusion_matrix(y_pred, y_true,
                           title=None,
                           cmap=plt.cm.Blues):
 
-    cm = confusion_matrix(y_pred, y_true, object_categories)
+    cm = confusion_matrix(y_pred, y_true, categories)
 
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
             
-    plt.title(title,fontsize=18,color='white')
-    plt.xlabel('Actual',fontsize=16,color='white')
-    plt.ylabel('Predicted',fontsize=16,color='white')      
-    ax.set_yticklabels([''] + object_categories,fontsize=9,color='white')
-    object_categories.pop(-1)
-    ax.set_xticklabels([''] + object_categories,fontsize=9,color='white',rotation=30)
+    plt.title(title,fontsize=18,color='black')
+    plt.xlabel('Actual',fontsize=16,color='black')
+    plt.ylabel('Predicted',fontsize=16,color='black')      
+    ax.set_yticklabels([''] + categories,fontsize=7.5,color='black')
+    categories.pop()
+    ax.set_xticklabels([''] + categories,fontsize=7.5,color='black',rotation=50)
     
     cax = ax.matshow(cm, interpolation='nearest', cmap=('PuBu'))
     
@@ -85,5 +85,4 @@ def plot_confusion_matrix(y_pred, y_true,
                     color="white" if cm[i, j] > thresh else "black")
 
 # Plot confusion matrix
-plot_confusion_matrix(y_pred, y_true,title='Confusion matrix\n\n\n')
-object_categories.append("Unclass")
+plot_confusion_matrix(y_pred, y_true,title='Confusion matrix\n\n\n\n')
